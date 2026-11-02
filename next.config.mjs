@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
+const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
+
 const nextConfig = {
   reactStrictMode: true,
+  output: 'export',
+  basePath: isGitHubPages ? '/migo-studio' : '',
+  assetPrefix: isGitHubPages ? '/migo-studio/' : undefined,
   images: {
     unoptimized: true,
   },

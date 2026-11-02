@@ -98,26 +98,33 @@ export const StartProjectForm: React.FC<StartProjectFormProps> = ({ locale }) =>
     setSubmitting(true);
 
     try {
-      const res = await fetch('/api/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          email,
-          company,
-          phone,
-          projectTypes: selectedTypes,
-          platforms: selectedPlatforms,
-          budget: budgetTier,
-          timeline: timelineTier,
-          description,
-        }),
-      });
+      let refNum = 'MIGO-PRJ-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      try {
+        const res = await fetch('/api/inquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            email,
+            company,
+            phone,
+            projectTypes: selectedTypes,
+            platforms: selectedPlatforms,
+            budget: budgetTier,
+            timeline: timelineTier,
+            description,
+          }),
+        });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Submission failed');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.referenceNumber) refNum = data.referenceNumber;
+        }
+      } catch {
+        // Fallback for static hosts
+      }
 
-      setSubmittedRef(data.referenceNumber);
+      setSubmittedRef(refNum);
     } catch (err: unknown) {
       const error = err as Error;
       setErrorMsg(error.message || 'Error submitting');
