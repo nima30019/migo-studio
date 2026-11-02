@@ -2,10 +2,10 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Locale, NAV_ITEMS, UI_STRINGS } from '@/data/translations';
 import { SERVICES } from '@/data/services';
+import { getAssetPath } from '@/utils/asset';
 import { Globe, ArrowUpRight, Mail, Phone, MapPin } from 'lucide-react';
 
 interface FooterProps {
@@ -34,12 +34,11 @@ export const Footer: React.FC<FooterProps> = ({ locale }) => {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <Link href={`/${locale}`} className="inline-flex items-center gap-3 group">
-              <div className="relative h-11 w-20">
-                <Image
-                  src="/migo-logo-transparent.png"
+              <div className="flex items-center">
+                <img
+                  src={getAssetPath('/migo-logo-transparent.png')}
                   alt="MIGO Studio Logo"
-                  fill
-                  className="object-contain"
+                  className="h-10 sm:h-11 w-auto max-w-[90px] object-contain"
                 />
               </div>
               <div className="flex flex-col">

@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Locale, NAV_ITEMS, UI_STRINGS } from '@/data/translations';
+import { getAssetPath } from '@/utils/asset';
 import { Menu, X, ArrowUpRight, Globe } from 'lucide-react';
 
 interface NavbarProps {
@@ -52,13 +52,11 @@ export const Navbar: React.FC<NavbarProps> = ({ locale }) => {
             className="flex items-center gap-3 group focus:outline-none"
           >
             {/* Elegant Transparent Logo */}
-            <div className="relative h-10 w-16 sm:h-11 sm:w-20 transition-transform duration-200 group-hover:scale-105">
-              <Image
-                src="/migo-logo-transparent.png"
+            <div className="flex items-center transition-transform duration-200 group-hover:scale-105">
+              <img
+                src={getAssetPath('/migo-logo-transparent.png')}
                 alt="MIGO Studio Logo"
-                fill
-                className="object-contain"
-                priority
+                className="h-10 sm:h-11 w-auto max-w-[90px] object-contain"
               />
             </div>
             <div className="hidden sm:flex flex-col">
