@@ -39,6 +39,12 @@ export const Footer: React.FC<FooterProps> = ({ locale }) => {
                   src={getAssetPath('/migo-logo-transparent.png')}
                   alt="MIGO Studio Logo"
                   className="h-10 sm:h-11 w-auto max-w-[90px] object-contain"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.includes('/migo-studio/')) {
+                      target.src = '/migo-studio/migo-logo-transparent.png';
+                    }
+                  }}
                 />
               </div>
               <div className="flex flex-col">

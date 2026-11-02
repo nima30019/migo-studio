@@ -58,6 +58,12 @@ export const Hero: React.FC<HeroProps> = ({ locale }) => {
                 src={logoUrl}
                 alt="MIGO Logo"
                 className="w-6 h-6 object-contain"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes('/migo-studio/')) {
+                    target.src = '/migo-studio/migo-logo-transparent.png';
+                  }
+                }}
               />
               <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />
               <span className="text-xs font-mono font-semibold uppercase tracking-wider text-brand-orange">
@@ -190,6 +196,12 @@ export const Hero: React.FC<HeroProps> = ({ locale }) => {
                     src={logoUrl}
                     alt="MIGO Creative Technology Studio Official Logo"
                     className="w-full h-auto object-contain drop-shadow-[0_12px_32px_rgba(255,120,31,0.4)]"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.includes('/migo-studio/')) {
+                        target.src = '/migo-studio/migo-logo-transparent.png';
+                      }
+                    }}
                   />
                 </div>
               </div>
