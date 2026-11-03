@@ -85,12 +85,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, locale }) => 
           <div className="pt-4 border-t border-[#28303B]/60 flex items-center justify-between">
             <Link
               href={`/${locale}/work/${project.slug}`}
+              aria-label={`${UI_STRINGS.viewProject[locale]}: ${project.title[locale]}`}
               onMouseEnter={() => soundFx.playHover()}
               onClick={() => soundFx.playClick()}
               className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-brand-orange hover:text-white transition-colors cursor-pointer"
             >
               <span>{UI_STRINGS.viewProject[locale]}</span>
               <ArrowUpRight
+                aria-hidden="true"
                 className={`w-4 h-4 ${isRTL ? 'rotate-[-90deg]' : ''}`}
               />
             </Link>

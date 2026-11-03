@@ -1,9 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { Metadata } from 'next';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { STUDIO_VALUES, TECH_STACK, APPROACH_STEPS } from '@/data/general';
 import { SectionHeader } from '@/components/SectionHeader';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getBreadcrumbSchema } from '@/utils/schema';
+import { getAssetPath } from '@/utils/asset';
 import {
   Sparkles,
   Target,
@@ -20,19 +24,47 @@ interface AboutPageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: AboutPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  return createLocalizedMetadata({
+    locale,
+    path: '/about',
+    title: locale === 'fa' ? 'درباره استودیو فناوری خلاق MIGO' : 'About MIGO — Creative Technology Studio',
+    description:
+      locale === 'fa'
+        ? 'آشنایی با تاریخچه، ارزش‌ها، متدولوژی مهندسی و اکوسیستم فنی استودیو MIGO در خلق دنیاهای تعاملی و واقعیت مجازی.'
+        : 'Learn about MIGO Studio: our engineering philosophy, core values, spatial computing methodology, and technology stack.',
+    keywords:
+      locale === 'fa'
+        ? ['درباره استودیو MIGO', 'تیم فناوری خلاق', 'متدولوژی توسعه واقعیت مجازی', 'فلسفه طراحی تعاملی']
+        : ['About MIGO Studio', 'Creative Technology Team', 'Spatial Computing Philosophy', 'Interactive Agency'],
+  });
+}
+
 export default function AboutPage({ params }: AboutPageProps) {
   const locale = params.locale === 'fa' ? 'fa' : 'en';
   const isRTL = locale === 'fa';
 
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'درباره ما' : 'About', path: '/about' },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-24">
+      <StructuredData id="about-breadcrumb-schema" data={breadcrumbSchema} />
       {/* 1. HERO HEADER */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#15191F] border border-[#28303B] mb-6">
-          <div className="w-4 h-4 relative">
-            <Image
-              src="/migo-logo.png"
-              alt="MIGO Icon"
+          <div className="w-4 h-4 relative flex items-center justify-center">
+            <img
+              src={getAssetPath('/migo-logo-transparent.png')}
+              alt={locale === 'en' ? 'MIGO Studio Icon' : 'آیکون استودیو MIGO'}
               width={16}
               height={16}
               className="object-contain"

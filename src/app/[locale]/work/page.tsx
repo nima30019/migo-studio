@@ -1,8 +1,12 @@
 import React from 'react';
+import { Metadata } from 'next';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { PROJECTS } from '@/data/projects';
 import { SectionHeader } from '@/components/SectionHeader';
 import { PortfolioGrid } from '@/components/PortfolioGrid';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getBreadcrumbSchema } from '@/utils/schema';
 
 interface WorkPageProps {
   params: {
@@ -10,11 +14,39 @@ interface WorkPageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: WorkPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  return createLocalizedMetadata({
+    locale,
+    path: '/work',
+    title: locale === 'fa' ? 'نمونه‌کارها و پروژه‌های تعاملی' : 'Selected Work & Interactive Case Studies',
+    description:
+      locale === 'fa'
+        ? 'مشاهده پروژه‌های برگزیده استودیو MIGO: شبیه‌سازهای صنعتی واقعیت مجازی، دیوارهای تعاملی نمایشگاهی، WebAR و بازی‌های تجاری.'
+        : 'Explore MIGO studio portfolio: Industrial VR Maintenance trainers, Kinetic Exhibition walls, WebAR configurators, and Serious Games.',
+    keywords:
+      locale === 'fa'
+        ? ['نمونه کار واقعیت مجازی', 'پروژه‌های نمایشگاهی', 'نمونه کار WebAR', 'شبیه‌ساز سه بعدی', 'پروژه‌های استودیو MIGO']
+        : ['VR Portfolio', 'Interactive Installations Showcase', 'WebAR Case Studies', 'Creative Tech Projects'],
+  });
+}
+
 export default function WorkPage({ params }: WorkPageProps) {
   const locale = params.locale === 'fa' ? 'fa' : 'en';
 
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'نمونه‌کارها' : 'Work', path: '/work' },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-16">
+      <StructuredData id="work-breadcrumb-schema" data={breadcrumbSchema} />
       {/* Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <SectionHeader

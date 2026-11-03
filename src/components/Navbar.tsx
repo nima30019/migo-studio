@@ -55,7 +55,13 @@ export const Navbar: React.FC<NavbarProps> = ({ locale }) => {
             <div className="flex items-center transition-transform duration-200 group-hover:scale-105">
               <img
                 src={getAssetPath('/migo-logo-transparent.png')}
-                alt="MIGO Studio Logo"
+                alt={
+                  locale === 'en'
+                    ? 'MIGO Creative Technology Studio Official Logo'
+                    : 'لوگوی رسمی استودیو فناوری خلاق MIGO'
+                }
+                width={80}
+                height={44}
                 className="h-10 sm:h-11 w-auto max-w-[90px] object-contain"
                 onError={(e) => {
                   const target = e.currentTarget;
@@ -104,18 +110,19 @@ export const Navbar: React.FC<NavbarProps> = ({ locale }) => {
           <div className="hidden md:flex items-center gap-3">
             <Link
               href={targetPath}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-neutral-400 hover:text-white bg-[#12151B] border border-white/[0.08] hover:border-brand-orange/60 transition-all"
+              aria-label={locale === 'en' ? 'تغییر زبان به فارسی' : 'Switch language to English'}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-neutral-400 hover:text-white bg-[#12151B] border border-white/[0.08] hover:border-brand-orange/60 transition-all min-h-[36px]"
             >
-              <Globe className="w-3.5 h-3.5 text-brand-orange" />
+              <Globe className="w-3.5 h-3.5 text-brand-orange" aria-hidden="true" />
               <span>{locale === 'en' ? 'فارسی' : 'EN'}</span>
             </Link>
 
             <Link
               href={`/${locale}/start-project`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white bg-brand-orange hover:bg-brand-orange-hover transition-all duration-200 shadow-[0_0_20px_rgba(255,120,31,0.35)] hover:shadow-[0_0_25px_rgba(255,120,31,0.5)] hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white bg-brand-orange hover:bg-brand-orange-hover transition-all duration-200 shadow-[0_0_20px_rgba(255,120,31,0.35)] hover:shadow-[0_0_25px_rgba(255,120,31,0.5)] hover:scale-105 active:scale-95 min-h-[36px]"
             >
               <span>{UI_STRINGS.startProject[locale]}</span>
-              <ArrowUpRight className={`w-3.5 h-3.5 ${isRTL ? 'rotate-[-90deg]' : ''}`} />
+              <ArrowUpRight className={`w-3.5 h-3.5 ${isRTL ? 'rotate-[-90deg]' : ''}`} aria-hidden="true" />
             </Link>
           </div>
 
@@ -123,17 +130,32 @@ export const Navbar: React.FC<NavbarProps> = ({ locale }) => {
           <div className="flex md:hidden items-center gap-2">
             <Link
               href={targetPath}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-neutral-300 bg-[#12151B] border border-white/[0.08]"
+              aria-label={locale === 'en' ? 'تغییر زبان به فارسی' : 'Switch language to English'}
+              className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-xs font-semibold text-neutral-300 bg-[#12151B] border border-white/[0.08] min-h-[44px] min-w-[44px]"
             >
-              <Globe className="w-3.5 h-3.5 text-brand-orange" />
+              <Globe className="w-4 h-4 text-brand-orange" aria-hidden="true" />
               <span>{locale === 'en' ? 'فا' : 'EN'}</span>
             </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-neutral-300 hover:text-white bg-[#12151B] border border-white/[0.08] focus:outline-none"
-              aria-label="Toggle navigation menu"
+              className="p-2.5 rounded-xl text-neutral-300 hover:text-white bg-[#12151B] border border-white/[0.08] focus:outline-none focus:ring-2 focus:ring-brand-orange min-h-[44px] min-w-[44px] flex items-center justify-center"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation-drawer"
+              aria-label={
+                mobileMenuOpen
+                  ? locale === 'fa'
+                    ? 'بستن منوی ناوبری'
+                    : 'Close navigation menu'
+                  : locale === 'fa'
+                  ? 'باز کردن منوی ناوبری'
+                  : 'Open navigation menu'
+              }
             >
-              {mobileMenuOpen ? <X className="w-5 h-5 text-brand-orange" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5 text-brand-orange" aria-hidden="true" />
+              ) : (
+                <Menu className="w-5 h-5" aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
@@ -141,7 +163,12 @@ export const Navbar: React.FC<NavbarProps> = ({ locale }) => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#08090C]/95 backdrop-blur-2xl border-b border-white/[0.08] px-5 pt-4 pb-8 space-y-3">
+        <div
+          id="mobile-navigation-drawer"
+          role="region"
+          aria-label={locale === 'fa' ? 'منوی ناوبری موبایل' : 'Mobile Navigation Menu'}
+          className="md:hidden bg-[#08090C]/95 backdrop-blur-2xl border-b border-white/[0.08] px-5 pt-4 pb-8 space-y-3"
+        >
           <div className="flex flex-col space-y-2">
             {NAV_ITEMS.map((item) => {
               const href = item.href(locale);

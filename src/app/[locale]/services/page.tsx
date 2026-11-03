@@ -1,11 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { SERVICES } from '@/data/services';
 import { PROJECTS } from '@/data/projects';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ServiceCard } from '@/components/ServiceCard';
 import { ProjectCard } from '@/components/ProjectCard';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getBreadcrumbSchema } from '@/utils/schema';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 
 interface ServicesPageProps {
@@ -14,13 +18,41 @@ interface ServicesPageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: ServicesPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  return createLocalizedMetadata({
+    locale,
+    path: '/services',
+    title: locale === 'fa' ? 'زمینه‌های فعالیت و خدمات تخصصی' : 'Specialized Creative Technology Services',
+    description:
+      locale === 'fa'
+        ? 'مشاهده ۷ زمینه تخصصی استودیو MIGO: واقعیت مجازی و ترکیبی، واقعیت افزوده، بازی‌های تعاملی، فناوری‌های نمایشگاهی، مدل‌سازی سه‌بعدی و شبیه‌سازی صنعتی.'
+        : 'Explore MIGO studio capabilities: VR/MR, Augmented Reality, Game Development, Kinetic Exhibition Installations, 3D Visualization, and Industrial Simulation.',
+    keywords:
+      locale === 'fa'
+        ? ['خدمات واقعیت مجازی', 'فناوری نمایشگاهی', 'طراحی بازی تعاملی', 'شبیه‌سازی صنعتی', 'توسعه WebAR']
+        : ['VR Development Services', 'Interactive Exhibitions', 'Enterprise Game Dev', 'Industrial VR Simulation'],
+  });
+}
+
 export default function ServicesPage({ params }: ServicesPageProps) {
   const locale = params.locale === 'fa' ? 'fa' : 'en';
   const isRTL = locale === 'fa';
   const showcaseProjects = PROJECTS.slice(0, 3);
 
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'خدمات' : 'Services', path: '/services' },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-24">
+      <StructuredData id="services-breadcrumb-schema" data={breadcrumbSchema} />
       {/* Hero Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <SectionHeader

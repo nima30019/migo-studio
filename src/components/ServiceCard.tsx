@@ -78,12 +78,14 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, locale }) => 
         {/* Action Link */}
         <Link
           href={`/${locale}/services/${service.slug}`}
+          aria-label={`${UI_STRINGS.learnMore[locale]}: ${service.title[locale]}`}
           onMouseEnter={() => soundFx.playHover()}
           onClick={() => soundFx.playClick()}
           className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-white group-hover:text-brand-orange transition-colors cursor-pointer"
         >
           <span>{UI_STRINGS.learnMore[locale]}</span>
           <ArrowRight
+            aria-hidden="true"
             className={`w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform ${
               isRTL ? 'rotate-180 group-hover:-translate-x-1.5' : ''
             }`}

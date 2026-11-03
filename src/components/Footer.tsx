@@ -37,7 +37,14 @@ export const Footer: React.FC<FooterProps> = ({ locale }) => {
               <div className="flex items-center">
                 <img
                   src={getAssetPath('/migo-logo-transparent.png')}
-                  alt="MIGO Studio Logo"
+                  alt={
+                    locale === 'en'
+                      ? 'MIGO Creative Technology Studio Official Logo'
+                      : 'لوگوی رسمی استودیو فناوری خلاق MIGO'
+                  }
+                  width={80}
+                  height={44}
+                  loading="lazy"
                   className="h-10 sm:h-11 w-auto max-w-[90px] object-contain"
                   onError={(e) => {
                     const target = e.currentTarget;

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { SERVICES } from '@/data/services';
 import { PROJECTS } from '@/data/projects';
@@ -12,6 +13,7 @@ import { ProjectCard } from '@/components/ProjectCard';
 import { StudioStatsMarquee } from '@/components/StudioStatsMarquee';
 import { InteractiveScrollShowcase } from '@/components/InteractiveScrollShowcase';
 import { TiltCard } from '@/components/TiltCard';
+import { createLocalizedMetadata } from '@/utils/seo';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -44,6 +46,28 @@ interface HomePageProps {
   params: {
     locale: Locale;
   };
+}
+
+export async function generateMetadata({
+  params,
+}: HomePageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  return createLocalizedMetadata({
+    locale,
+    path: '',
+    title:
+      locale === 'fa'
+        ? 'خلق تجربیات تعاملی، واقعیت مجازی و استودیو سه‌بعدی'
+        : 'Creative Technology Studio — We Create Interactive Experiences',
+    description:
+      locale === 'fa'
+        ? 'استودیو MIGO طراح و توسعه‌دهنده تجربیات تعاملی، سیستم‌های نمایشگاهی هوشمند، واقعیت مجازی (VR/MR)، بازی‌های سازمانی و شبیه‌سازی سه‌بعدی.'
+        : 'MIGO designs and develops immersive digital experiences, interactive exhibitions, VR/AR, serious games, and photorealistic 3D simulations.',
+    keywords:
+      locale === 'fa'
+        ? ['واقعیت مجازی', 'فناوری نمایشگاهی', 'طراحی سه‌بعدی', 'WebAR', 'شبیه‌سازی صنعتی', 'بازی تعاملی']
+        : ['Interactive Experiences', 'Virtual Reality', 'Exhibition Tech', 'WebAR', 'Industrial VR'],
+  });
 }
 
 export default function HomePage({ params }: HomePageProps) {

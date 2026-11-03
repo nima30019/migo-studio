@@ -1,11 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { SERVICES } from '@/data/services';
 import { PROJECTS } from '@/data/projects';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ProjectCard } from '@/components/ProjectCard';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getServiceSchema, getFAQSchema, getBreadcrumbSchema } from '@/utils/schema';
 import {
   ArrowLeft,
   ArrowRight,
@@ -38,6 +42,33 @@ interface ServiceDetailPageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: ServiceDetailPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  const service = SERVICES.find((s) => s.slug === params.slug);
+
+  if (!service) {
+    return createLocalizedMetadata({
+      locale,
+      title: 'Service Not Found',
+      noIndex: true,
+    });
+  }
+
+  return createLocalizedMetadata({
+    locale,
+    path: `/services/${service.slug}`,
+    title: service.title[locale],
+    description: service.shortDescription[locale],
+    keywords: [
+      ...service.technologies,
+      service.badge[locale],
+      locale === 'fa' ? 'خدمات تعاملی MIGO' : 'MIGO Interactive Services',
+    ],
+  });
+}
+
 export default function ServiceDetailPage({ params }: ServiceDetailPageProps) {
   const locale = params.locale === 'fa' ? 'fa' : 'en';
   const isRTL = locale === 'fa';
@@ -52,8 +83,20 @@ export default function ServiceDetailPage({ params }: ServiceDetailPageProps) {
     service.relevantProjects.includes(p.id)
   );
 
+  const serviceSchema = getServiceSchema(service, locale);
+  const faqSchema = getFAQSchema(service.faqs, locale);
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'خدمات' : 'Services', path: '/services' },
+      { name: service.title[locale], path: `/services/${service.slug}` },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-24">
+      <StructuredData id="service-page-schema" data={[serviceSchema, faqSchema, breadcrumbSchema]} />
       {/* 1. HERO SECTION */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <Link

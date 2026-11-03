@@ -1,14 +1,37 @@
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { ARTICLES } from '@/data/articles';
 import { SectionHeader } from '@/components/SectionHeader';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getBreadcrumbSchema } from '@/utils/schema';
 import { Clock, Calendar, ArrowRight, ArrowUpRight, BookOpen } from 'lucide-react';
 
 interface InsightsPageProps {
   params: {
     locale: Locale;
   };
+}
+
+export async function generateMetadata({
+  params,
+}: InsightsPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  return createLocalizedMetadata({
+    locale,
+    path: '/insights',
+    title: locale === 'fa' ? 'مقالات و بینش‌های تخصصی فناوری خلاق' : 'Insights & Technical Editorial in Spatial Computing',
+    description:
+      locale === 'fa'
+        ? 'مجموعه مقالات و بررسی‌های تخصصی استودیو MIGO پیرامون آینده واقعیت مجازی، استانداردهای WebAR، تعاملات نمایشگاهی و شبیه‌سازها.'
+        : 'In-depth articles and technical analysis from MIGO Studio on the future of virtual reality, WebAR engineering, and interactive systems.',
+    keywords:
+      locale === 'fa'
+        ? ['مقالات واقعیت مجازی', 'آموزش WebAR', 'فناوری نمایشگاهی', 'شبیه‌سازی صنعتی', 'نشریه MIGO']
+        : ['Spatial Computing Articles', 'VR Insights', 'WebAR Tutorials', 'Interactive Tech Editorial'],
+  });
 }
 
 export default function InsightsPage({ params }: InsightsPageProps) {
@@ -18,8 +41,17 @@ export default function InsightsPage({ params }: InsightsPageProps) {
   const featuredArticle = ARTICLES.find((a) => a.featured) || ARTICLES[0];
   const standardArticles = ARTICLES.filter((a) => a.id !== featuredArticle.id);
 
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'مقالات' : 'Insights', path: '/insights' },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-16">
+      <StructuredData id="insights-breadcrumb-schema" data={breadcrumbSchema} />
       {/* Header */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <SectionHeader

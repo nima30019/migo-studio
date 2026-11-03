@@ -1,7 +1,11 @@
 import React from 'react';
+import { Metadata } from 'next';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { SectionHeader } from '@/components/SectionHeader';
 import { ContactForm } from '@/components/ContactForm';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getBreadcrumbSchema } from '@/utils/schema';
 import { Mail, Phone, MapPin, Clock, MessageSquare } from 'lucide-react';
 
 interface ContactPageProps {
@@ -10,11 +14,39 @@ interface ContactPageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: ContactPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  return createLocalizedMetadata({
+    locale,
+    path: '/contact',
+    title: locale === 'fa' ? 'تماس با استودیو MIGO — مشاوره پروژه تعاملی' : 'Contact MIGO Studio — Interactive Project Consultation',
+    description:
+      locale === 'fa'
+        ? 'ارتباط مستقیم با مدیران فنی و هنری استودیو MIGO جهت مشاوره، استعلام هزینه و همکاری در پروژه‌های واقعیت مجازی، نمایشگاهی و سه‌بعدی.'
+        : 'Connect with MIGO Creative Technology Studio. Contact our team for project inquiries, technical consultation, and collaboration.',
+    keywords:
+      locale === 'fa'
+        ? ['تماس با استودیو MIGO', 'سفارش واقعیت مجازی', 'مشاوره غرفه تعاملی', 'استعلام قیمت نرم افزار سه بعدی']
+        : ['Contact MIGO Studio', 'VR Project Consultation', 'Interactive Agency Inquiry', 'Creative Tech RFP'],
+  });
+}
+
 export default function ContactPage({ params }: ContactPageProps) {
   const locale = params.locale === 'fa' ? 'fa' : 'en';
 
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'تماس با ما' : 'Contact', path: '/contact' },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-16">
+      <StructuredData id="contact-breadcrumb-schema" data={breadcrumbSchema} />
       {/* Header */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <SectionHeader

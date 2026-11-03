@@ -1,9 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { PROJECTS } from '@/data/projects';
 import { ProjectCard } from '@/components/ProjectCard';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getCreativeWorkSchema, getBreadcrumbSchema } from '@/utils/schema';
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -35,6 +39,33 @@ interface ProjectDetailPageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: ProjectDetailPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  const project = PROJECTS.find((p) => p.slug === params.slug);
+
+  if (!project) {
+    return createLocalizedMetadata({
+      locale,
+      title: 'Project Not Found',
+      noIndex: true,
+    });
+  }
+
+  return createLocalizedMetadata({
+    locale,
+    path: `/work/${project.slug}`,
+    title: project.title[locale],
+    description: project.shortDescription[locale],
+    keywords: [
+      ...project.technologies,
+      project.category[locale],
+      locale === 'fa' ? 'پروژه استودیو MIGO' : 'MIGO Studio Project',
+    ],
+  });
+}
+
 export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const locale = params.locale === 'fa' ? 'fa' : 'en';
   const isRTL = locale === 'fa';
@@ -54,8 +85,19 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       ? relatedProjects
       : PROJECTS.filter((p) => p.id !== project.id).slice(0, 2);
 
+  const creativeWorkSchema = getCreativeWorkSchema(project, locale);
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'نمونه‌کارها' : 'Work', path: '/work' },
+      { name: project.title[locale], path: `/work/${project.slug}` },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-20">
+      <StructuredData id="project-case-study-schema" data={[creativeWorkSchema, breadcrumbSchema]} />
       {/* 1. HERO HEADER */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link

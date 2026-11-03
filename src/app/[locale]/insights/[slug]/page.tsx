@@ -1,9 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Locale, UI_STRINGS } from '@/data/translations';
 import { ARTICLES } from '@/data/articles';
 import { ShareButton } from '@/components/ShareButton';
+import { StructuredData } from '@/components/StructuredData';
+import { createLocalizedMetadata } from '@/utils/seo';
+import { getArticleSchema, getBreadcrumbSchema } from '@/utils/schema';
 import {
   ArrowLeft,
   ArrowRight,
@@ -33,6 +37,36 @@ interface ArticleDetailPageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: ArticleDetailPageProps): Promise<Metadata> {
+  const locale = params.locale === 'fa' ? 'fa' : 'en';
+  const article = ARTICLES.find((a) => a.slug === params.slug);
+
+  if (!article) {
+    return createLocalizedMetadata({
+      locale,
+      title: 'Article Not Found',
+      noIndex: true,
+    });
+  }
+
+  return createLocalizedMetadata({
+    locale,
+    path: `/insights/${article.slug}`,
+    title: article.title[locale],
+    description: article.excerpt[locale],
+    type: 'article',
+    publishedTime: article.date,
+    authors: [article.author],
+    keywords: [
+      ...article.tags,
+      article.category[locale],
+      locale === 'fa' ? 'مقاله MIGO' : 'MIGO Article',
+    ],
+  });
+}
+
 export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
   const locale = params.locale === 'fa' ? 'fa' : 'en';
   const isRTL = locale === 'fa';
@@ -44,8 +78,19 @@ export default function ArticleDetailPage({ params }: ArticleDetailPageProps) {
 
   const relatedArticles = ARTICLES.filter((a) => a.id !== article.id).slice(0, 2);
 
+  const articleSchema = getArticleSchema(article, locale);
+  const breadcrumbSchema = getBreadcrumbSchema(
+    [
+      { name: locale === 'fa' ? 'صفحه اصلی' : 'Home', path: '' },
+      { name: locale === 'fa' ? 'مقالات' : 'Insights', path: '/insights' },
+      { name: article.title[locale], path: `/insights/${article.slug}` },
+    ],
+    locale
+  );
+
   return (
     <div className="pt-32 pb-24 space-y-16">
+      <StructuredData id="article-jsonld-schema" data={[articleSchema, breadcrumbSchema]} />
       {/* 1. ARTICLE HEADER */}
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link

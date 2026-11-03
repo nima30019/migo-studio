@@ -56,7 +56,9 @@ export const Hero: React.FC<HeroProps> = ({ locale }) => {
             <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#12151B]/90 border border-white/[0.1] shadow-inner backdrop-blur-md">
               <img
                 src={logoUrl}
-                alt="MIGO Logo"
+                alt={locale === 'en' ? 'MIGO Studio Symbol' : 'نشان استودیو MIGO'}
+                width={24}
+                height={24}
                 className="w-6 h-6 object-contain"
                 onError={(e) => {
                   const target = e.currentTarget;
@@ -194,7 +196,14 @@ export const Hero: React.FC<HeroProps> = ({ locale }) => {
                 <div className="relative z-10 w-full max-w-[340px] sm:max-w-[380px] flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                   <img
                     src={logoUrl}
-                    alt="MIGO Creative Technology Studio Official Logo"
+                    alt={
+                      locale === 'en'
+                        ? 'MIGO Creative Technology Studio Official 3D Emblem'
+                        : 'نشان رسمی سه‌بعدی استودیو فناوری خلاق MIGO'
+                    }
+                    width={380}
+                    height={180}
+                    fetchPriority="high"
                     className="w-full h-auto object-contain drop-shadow-[0_12px_32px_rgba(255,120,31,0.4)]"
                     onError={(e) => {
                       const target = e.currentTarget;

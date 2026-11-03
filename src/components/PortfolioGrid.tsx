@@ -22,9 +22,13 @@ export const PortfolioGrid: React.FC<PortfolioGridProps> = ({ projects, locale }
   return (
     <div>
       {/* Category Filter Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar">
+      <div
+        role="tablist"
+        aria-label={locale === 'fa' ? 'فیلتر دسته‌بندی پروژه‌ها' : 'Project category filters'}
+        className="flex items-center gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar"
+      >
         <div className="hidden sm:flex items-center gap-1.5 text-xs text-[#6B7280] px-2">
-          <Filter className="w-3.5 h-3.5" />
+          <Filter className="w-3.5 h-3.5" aria-hidden="true" />
           <span>{locale === 'en' ? 'Filter:' : 'دسته‌بندی:'}</span>
         </div>
         {PROJECT_CATEGORIES.map((cat) => {
@@ -32,8 +36,10 @@ export const PortfolioGrid: React.FC<PortfolioGridProps> = ({ projects, locale }
           return (
             <button
               key={cat.key}
+              role="tab"
+              aria-selected={isActive}
               onClick={() => setActiveCategory(cat.key)}
-              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer min-h-[38px] ${
                 isActive
                   ? 'bg-brand-orange text-white shadow-glow-orange'
                   : 'bg-[#15191F] text-[#A0A6B0] hover:text-white border border-[#28303B] hover:border-brand-orange/40'
